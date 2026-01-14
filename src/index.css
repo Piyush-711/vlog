@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Color Palette - Vibrant Pastel */
+  --color-bg-main: #FFFBF8;
+  /* Warm cream */
+  --color-bg-card: #FFFFFF;
+
+  --color-primary: #FF9F43;
+  /* Vivid Orange for CTA */
+  --color-primary-hover: #F98926;
+
+  --color-secondary: #A29BFE;
+  /* Soft Purple */
+  --color-secondary-light: #E0C3FC;
+  --color-secondary-bg: #8c7ae6;
+  /* Darker purple for backgrounds */
+
+  --color-text-main: #2D3436;
+  /* Dark Grey */
+  --color-text-muted: #636E72;
+
+  --color-border: #F0F0F0;
+
+  /* Spacing & Radius */
+  --radius-xl: 24px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+
+  --shadow-soft: 0 10px 25px -5px rgba(162, 155, 254, 0.15), 0 8px 10px -6px rgba(162, 155, 254, 0.1);
+  --shadow-hover: 0 20px 25px -5px rgba(162, 155, 254, 0.2), 0 10px 10px -5px rgba(162, 155, 254, 0.1);
+
+  /* Typography */
+  --font-family-main: 'Outfit', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-main);
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+/* Utilities */
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: 50px;
+  /* Pill shape */
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(255, 159, 67, 0.3);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: var(--color-secondary-bg);
+  border: 2px solid transparent;
+}
+
+.btn-secondary:hover {
+  color: var(--color-secondary);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-secondary-bg);
+  box-shadow: none;
+  font-weight: 600;
+}
+
+.btn-ghost:hover {
+  color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-text-main) 0%, var(--color-primary) 100%);
+  /* Adjusted for readability */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom Gradient Text for Hero branding if needed */
+.text-brand {
+  background: linear-gradient(90deg, #6C5CE7 0%, #FF9F43 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
+}
+
+.section {
+  padding: 80px 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
