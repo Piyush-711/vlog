@@ -29,7 +29,7 @@ const Navbar = () => {
                         <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--color-primary)' }}></div>
                         <div style={{ width: '12px', height: '12px', borderRadius: '50%', border: '2px solid var(--color-primary)' }}></div>
                     </div>
-                    <span style={{ color: 'var(--color-text-main)' }}>Narrative</span>
+                    <span style={{ color: 'var(--color-text-main)' }}>A Dilettante</span>
                 </Link>
 
                 {/* Desktop Nav - Centered */}
