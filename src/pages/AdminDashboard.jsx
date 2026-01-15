@@ -10,6 +10,7 @@ const AdminDashboard = () => {
     const [contentList, setContentList] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const [currentId, setCurrentId] = useState(null);
+    const [filterCategory, setFilterCategory] = useState('all');
 
     const [formData, setFormData] = useState({
         title: '',
@@ -242,45 +243,99 @@ const AdminDashboard = () => {
 
                 {/* RIGHT COLUMN: LIST */}
                 <div style={{ maxHeight: '800px', overflowY: 'auto' }}>
-                    <h2 style={{ fontSize: '1.25rem', marginBottom: '24px', fontWeight: '700', paddingBottom: '16px' }}>Existing Content</h2>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '24px',
+                        borderBottom: '1px solid #eee',
+                        paddingBottom: '16px'
+                    }}>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: '700', margin: 0 }}>Content List</h2>
+                        <select
+                            value={filterCategory}
+                            onChange={(e) => setFilterCategory(e.target.value)}
+                            style={{
+                                padding: '8px',
+                                borderRadius: 'var(--radius-sm)',
+                                border: '1px solid var(--color-border)',
+                                fontSize: '0.9rem',
+                                background: 'white'
+                            }}
+                        >
+                            <option value="all">All Categories</option>
+                            <option value="story">Stories</option>
+                            <option value="vlog">Vlogs</option>
+                            <option value="poetry">Poetry</option>
+                            <option value="profile">Profile</option>
+                            <option value="gallery">Gallery</option>
+                            <option value="achievement">Achievements</option>
+                        </select>
+                    </div>
+
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        {contentList.length === 0 ? (
-                            <div style={{ color: 'var(--color-text-muted)', fontStyle: 'italic' }}>No content uploaded yet.</div>
+                        {contentList
+                            .filter(item => filterCategory === 'all' || item.category === filterCategory)
+                            .length === 0 ? (
+                            <div style={{ color: 'var(--color-text-muted)', fontStyle: 'italic', textAlign: 'center', padding: '20px' }}>
+                                {filterCategory === 'all' ? 'No content uploaded yet.' : `No ${filterCategory} content found.`}
+                            </div>
                         ) : (
-                            contentList.map(item => (
-                                <div key={item.id} className="card" style={{ padding: '16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
-                                    {/* Tiny Thumbnail */}
-                                    <div style={{ width: '60px', height: '60px', borderRadius: '8px', background: '#eee', overflow: 'hidden', flexShrink: 0 }}>
-                                        {item.thumbnail ? (
-                                            <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        ) : (
-                                            <div style={{ width: '100%', height: '100%', background: 'var(--color-secondary)', opacity: 0.2 }}></div>
-                                        )}
-                                    </div>
+                            contentList
+                                .filter(item => filterCategory === 'all' || item.category === filterCategory)
+                                .map(item => (
+                                    <div key={item.id} className="card" style={{ padding: '16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+                                        {/* Tiny Thumbnail */}
+                                        <div style={{ width: '60px', height: '60px', borderRadius: '8px', background: '#eee', overflow: 'hidden', flexShrink: 0 }}>
+                                            {item.thumbnail ? (
+                                                <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            ) : (
+                                                <div style={{ width: '100%', height: '100%', background: 'var(--color-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(0,0,0,0.2)' }}>
+                                                    {/* Simple placeholder icon if needed */}
+                                                    #
+                                                </div>
+                                            )}
+                                        </div>
 
-                                    <div style={{ flex: 1 }}>
-                                        <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '4px' }}>{item.title}</h4>
-                                        <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: '600', letterSpacing: '0.5px' }}>{item.category}</span>
-                                    </div>
+                                        <div style={{ flex: 1 }}>
+                                            <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '4px' }}>{item.title}</h4>
+                                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                <span style={{
+                                                    fontSize: '0.75rem',
+                                                    textTransform: 'uppercase',
+                                                    color: 'var(--color-primary)',
+                                                    fontWeight: '700',
+                                                    letterSpacing: '0.5px',
+                                                    background: 'rgba(255, 159, 67, 0.1)',
+                                                    padding: '2px 8px',
+                                                    borderRadius: '4px'
+                                                }}>
+                                                    {item.category}
+                                                </span>
+                                                {item.category === 'achievement' && (
+                                                    <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>{item.content}</span>
+                                                )}
+                                            </div>
+                                        </div>
 
-                                    <div style={{ display: 'flex', gap: '8px' }}>
-                                        <button
-                                            onClick={() => handleEdit(item)}
-                                            style={{ padding: '8px', borderRadius: '50%', background: '#F0F0F0', color: 'var(--color-text-main)', cursor: 'pointer' }}
-                                            title="Edit"
-                                        >
-                                            <Edit2 size={16} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(item.id)}
-                                            style={{ padding: '8px', borderRadius: '50%', background: '#ff7675', color: 'white', cursor: 'pointer', border: 'none' }}
-                                            title="Delete"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <button
+                                                onClick={() => handleEdit(item)}
+                                                style={{ padding: '8px', borderRadius: '50%', background: '#F0F0F0', color: 'var(--color-text-main)', cursor: 'pointer', border: 'none' }}
+                                                title="Edit"
+                                            >
+                                                <Edit2 size={16} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(item.id)}
+                                                style={{ padding: '8px', borderRadius: '50%', background: '#ff7675', color: 'white', cursor: 'pointer', border: 'none' }}
+                                                title="Delete"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))
+                                ))
                         )}
                     </div>
                 </div>
