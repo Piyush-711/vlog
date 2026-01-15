@@ -90,5 +90,23 @@ export const mockApi = {
 
     fetchAchievements: async () => {
         return await mockApi.fetchContent('achievement');
+    },
+
+    uploadFile: async (file) => {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('uploads')
+            .upload(filePath, file);
+
+        if (uploadError) {
+            console.error("Supabase storage upload error:", uploadError);
+            throw uploadError;
+        }
+
+        const { data } = supabase.storage.from('uploads').getPublicUrl(filePath);
+        return data.publicUrl;
     }
 };

@@ -8,7 +8,8 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
     const [contentList, setContentList] = useState([]);
-    const [editMode, setEditMode] = useState(false);
+    const [inputType, setInputType] = useState('url');
+    const [file, setFile] = useState(null);
     const [currentId, setCurrentId] = useState(null);
     const [filterCategory, setFilterCategory] = useState('all');
 
@@ -44,8 +45,11 @@ const AdminDashboard = () => {
             content: '',
             text_content: ''
         });
+
         setEditMode(false);
         setCurrentId(null);
+        setFile(null);
+        setInputType('url');
     };
 
     const handleEdit = (item) => {
@@ -77,11 +81,20 @@ const AdminDashboard = () => {
         e.preventDefault();
         setLoading(true);
         try {
+            let finalThumbnailUrl = formData.thumbnail;
+
+            if (inputType === 'file' && file) {
+                // Upload file to Supabase
+                finalThumbnailUrl = await mockApi.uploadFile(file);
+            }
+
+            const dataToSave = { ...formData, thumbnail: finalThumbnailUrl };
+
             if (editMode) {
-                await mockApi.updateContent(currentId, formData);
+                await mockApi.updateContent(currentId, dataToSave);
                 setSuccess('Content updated successfully!');
             } else {
-                await mockApi.uploadContent(formData);
+                await mockApi.uploadContent(dataToSave);
                 setSuccess('Content uploaded successfully!');
             }
 
@@ -89,13 +102,13 @@ const AdminDashboard = () => {
 
             setTimeout(() => {
                 setSuccess('');
-                if (!editMode) resetForm(); // Keep form if editing? No, reset is better.
+                if (!editMode) resetForm();
                 else resetForm();
             }, 2000);
 
         } catch (error) {
             console.error(error);
-            alert(`Error saving content: ${error.message || error.error_description || "Unknown error"}. Check if table 'content' exists and RLS policies allow write access.`);
+            alert(`Error saving content: ${error.message || "Unknown error"}. Check if table 'content' exists and RLS policies allow write access.`);
         } finally {
             setLoading(false);
         }
@@ -166,15 +179,45 @@ const AdminDashboard = () => {
 
                             {/* Thumbnail */}
                             <div>
-                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Thumbnail URL</label>
-                                <input
-                                    type="url"
-                                    name="thumbnail"
-                                    value={formData.thumbnail}
-                                    onChange={handleChange}
-                                    style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem' }}
-                                    placeholder="https://..."
-                                />
+                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Thumbnail Source</label>
+                                <div style={{ display: 'flex', gap: '16px', marginBottom: '12px' }}>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                                        <input
+                                            type="radio"
+                                            name="inputType"
+                                            value="url"
+                                            checked={inputType === 'url'}
+                                            onChange={() => setInputType('url')}
+                                        /> URL
+                                    </label>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                                        <input
+                                            type="radio"
+                                            name="inputType"
+                                            value="file"
+                                            checked={inputType === 'file'}
+                                            onChange={() => setInputType('file')}
+                                        /> Upload File
+                                    </label>
+                                </div>
+
+                                {inputType === 'url' ? (
+                                    <input
+                                        type="url"
+                                        name="thumbnail"
+                                        value={formData.thumbnail}
+                                        onChange={handleChange}
+                                        style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem' }}
+                                        placeholder="https://..."
+                                    />
+                                ) : (
+                                    <input
+                                        type="file"
+                                        accept="image/png, image/jpeg, image/jpg"
+                                        onChange={(e) => setFile(e.target.files[0])}
+                                        style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem', background: 'white' }}
+                                    />
+                                )}
                             </div>
 
                             {/* Preview Text */}
@@ -189,7 +232,7 @@ const AdminDashboard = () => {
                                     onChange={handleChange}
                                     rows={3}
                                     style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem', fontFamily: 'inherit' }}
-                                    placeholder="A short description for the card..."
+                                    placeholder={formData.category === 'achievement' ? 'e.g., Awarded for excellence...' : 'A short description for the card...'}
                                 />
                             </div>
 
