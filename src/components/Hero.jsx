@@ -50,7 +50,7 @@ const Hero = () => {
 
                         {/* Main Image */}
                         <img
-                            src="/hero_section_illustration.png" // We will move the generated artifact here
+                            src="/IMG_5693.JPG" // We will move the generated artifact here
                             alt="Creative people sharing content"
                             style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '600px', height: 'auto', borderRadius: 'var(--radius-xl)' }}
                         />
