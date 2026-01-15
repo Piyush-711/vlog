@@ -10,6 +10,7 @@ const AdminDashboard = () => {
     const [contentList, setContentList] = useState([]);
     const [inputType, setInputType] = useState('url');
     const [file, setFile] = useState(null);
+    const [editMode, setEditMode] = useState(false);
     const [currentId, setCurrentId] = useState(null);
     const [filterCategory, setFilterCategory] = useState('all');
 
