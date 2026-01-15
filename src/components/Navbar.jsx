@@ -9,7 +9,6 @@ const Navbar = () => {
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Explore', path: '/explore' }, // Placeholder based on image
-        { name: 'Stories', path: '/stories' },
         { name: 'Categories', path: '/categories' }, // Placeholder
     ];
 
