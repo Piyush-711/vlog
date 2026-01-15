@@ -52,7 +52,7 @@ const Hero = () => {
                         <img
                             src="/IMG_5693.JPG" // We will move the generated artifact here
                             alt="Creative people sharing content"
-                            style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '600px', height: 'auto', borderRadius: 'var(--radius-xl)' }}
+                            style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '600px', height: '500px', objectFit: 'cover', borderRadius: 'var(--radius-xl)' }}
                         />
                     </div>
                 </div>
