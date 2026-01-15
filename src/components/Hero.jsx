@@ -20,7 +20,7 @@ const Hero = () => {
                         color: '#2D3436'
                     }}>
                         Jack of all<br />
-                        trades,Master of<br />
+                        Trades,Master of<br />
                         & <span style={{ color: 'var(--color-primary)' }}>None</span>
                     </h1>
                     <p style={{
