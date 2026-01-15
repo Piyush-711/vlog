@@ -108,5 +108,34 @@ export const mockApi = {
 
         const { data } = supabase.storage.from('uploads').getPublicUrl(filePath);
         return data.publicUrl;
+    },
+
+    // Pinned Content Helpers
+    fetchPinned: async () => {
+        // Fetch up to 3 pinned items
+        const { data, error } = await supabase
+            .from('content')
+            .select('*')
+            .eq('is_pinned', true)
+            .limit(3);
+
+        if (error) {
+            console.error("Supabase fetchPinned error:", error);
+            return [];
+        }
+        return data || [];
+    },
+
+    togglePin: async (id, currentStatus) => {
+        const { error } = await supabase
+            .from('content')
+            .update({ is_pinned: !currentStatus })
+            .eq('id', id);
+
+        if (error) {
+            console.error("Supabase togglePin error:", error);
+            throw error;
+        }
+        return true;
     }
 };

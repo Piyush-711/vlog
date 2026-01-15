@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { mockApi } from '../lib/supabaseClient';
-import { UploadCloud, CheckCircle, Trash2, Edit2, X, PlusCircle } from 'lucide-react';
+import { UploadCloud, CheckCircle, Trash2, Edit2, X, PlusCircle, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
@@ -75,6 +75,15 @@ const AdminDashboard = () => {
             } catch (error) {
                 alert(`Error deleting content: ${error.message}`);
             }
+        }
+    };
+
+    const handlePin = async (item) => {
+        try {
+            await mockApi.togglePin(item.id, item.is_pinned);
+            loadContent(); // Refresh list to update star status
+        } catch (error) {
+            alert(`Error pinning content: ${error.message}`);
         }
     };
 
@@ -363,6 +372,13 @@ const AdminDashboard = () => {
                                         </div>
 
                                         <div style={{ display: 'flex', gap: '8px' }}>
+                                            <button
+                                                onClick={() => handlePin(item)}
+                                                style={{ padding: '8px', borderRadius: '50%', background: item.is_pinned ? '#fdcb6e' : '#F0F0F0', color: item.is_pinned ? 'white' : 'var(--color-text-main)', cursor: 'pointer', border: 'none' }}
+                                                title={item.is_pinned ? "Unpin" : "Pin to Home"}
+                                            >
+                                                <Star size={16} fill={item.is_pinned ? "white" : "none"} />
+                                            </button>
                                             <button
                                                 onClick={() => handleEdit(item)}
                                                 style={{ padding: '8px', borderRadius: '50%', background: '#F0F0F0', color: 'var(--color-text-main)', cursor: 'pointer', border: 'none' }}
