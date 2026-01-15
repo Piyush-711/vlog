@@ -11,7 +11,7 @@ const Footer = () => {
                     <Facebook size={20} className="social-icon" />
                 </div>
                 <p style={{ color: 'var(--color-text-muted)', marginBottom: '10px' }}>
-                    &copy; {new Date().getFullYear()} A Dilettante. All rights reserved.
+                    &copy; {new Date().getFullYear()} Utsav Agarwal. All rights reserved.
                 </p>
                 <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                     Made with <Heart size={14} fill="var(--color-primary)" stroke="none" /> for storytellers.
