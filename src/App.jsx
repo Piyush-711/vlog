@@ -9,6 +9,7 @@ import ViewContent from './pages/ViewContent';
 import AdminDashboard from './pages/AdminDashboard';
 import Explore from './pages/Explore';
 import Categories from './pages/Categories';
+import About from './pages/About';
 import { supabase } from './lib/supabaseClient';
 import { Loader2 } from 'lucide-react';
 
@@ -53,6 +54,7 @@ function App() {
             <Route path="/vlogs" element={<Feed type="vlog" />} />
             <Route path="/poetry" element={<Feed type="poetry" />} />
             <Route path="/view/:id" element={<ViewContent />} />
+            <Route path="/about" element={<About />} />
 
             <Route path="/admin" element={
               <PrivateRoute>

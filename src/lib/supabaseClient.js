@@ -75,5 +75,20 @@ export const mockApi = {
             throw error;
         }
         return true;
+    },
+
+    // About Page Helpers
+    fetchProfile: async () => {
+        // We assume there's only one profile entry, or we take the most recent one
+        const data = await mockApi.fetchContent('profile');
+        return data[0] || null;
+    },
+
+    fetchGallery: async () => {
+        return await mockApi.fetchContent('gallery');
+    },
+
+    fetchAchievements: async () => {
+        return await mockApi.fetchContent('achievement');
     }
 };

@@ -100,7 +100,7 @@ const AdminDashboard = () => {
         }
     };
 
-    const isVideo = formData.category === 'vlog';
+
 
     return (
         <div className="container section" style={{ maxWidth: '900px' }}>
@@ -157,6 +157,9 @@ const AdminDashboard = () => {
                                     <option value="story">Written Story</option>
                                     <option value="vlog">Video Log</option>
                                     <option value="poetry">Poetry</option>
+                                    <option value="profile">Profile Intro</option>
+                                    <option value="gallery">Gallery Image</option>
+                                    <option value="achievement">Achievement</option>
                                 </select>
                             </div>
 
@@ -175,7 +178,9 @@ const AdminDashboard = () => {
 
                             {/* Preview Text */}
                             <div>
-                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Short Preview</label>
+                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+                                    {formData.category === 'profile' ? 'Role / Tagline' : (formData.category === 'achievement' ? 'Description' : 'Short Preview')}
+                                </label>
                                 <textarea
                                     name="preview"
                                     required
@@ -188,32 +193,38 @@ const AdminDashboard = () => {
                             </div>
 
                             {/* Dynamic Content Fields */}
-                            {isVideo ? (
+                            {(formData.category === 'vlog' || formData.category === 'achievement') ? (
                                 <div>
-                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Video URL (Embed/Link)</label>
+                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+                                        {formData.category === 'achievement' ? 'Year' : 'Video URL (Embed/Link)'}
+                                    </label>
                                     <input
                                         type="text"
                                         name="content"
-                                        required={isVideo}
+                                        required={true}
                                         value={formData.content}
                                         onChange={handleChange}
                                         style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem' }}
-                                        placeholder="Video source..."
+                                        placeholder={formData.category === 'achievement' ? 'e.g., 2024' : 'Video source...'}
                                     />
                                 </div>
                             ) : (
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Main Text Content</label>
-                                    <textarea
-                                        name="text_content"
-                                        required={!isVideo}
-                                        value={formData.text_content}
-                                        onChange={handleChange}
-                                        rows={10}
-                                        style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem', fontFamily: 'inherit' }}
-                                        placeholder="Write your story or poem here..."
-                                    />
-                                </div>
+                                formData.category !== 'gallery' && (
+                                    <div>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+                                            {formData.category === 'profile' ? 'Bio / Introduction' : 'Main Text Content'}
+                                        </label>
+                                        <textarea
+                                            name="text_content"
+                                            required={true}
+                                            value={formData.text_content}
+                                            onChange={handleChange}
+                                            rows={10}
+                                            style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem', fontFamily: 'inherit' }}
+                                            placeholder={formData.category === 'profile' ? 'Tell us about yourself...' : 'Write your story or poem here...'}
+                                        />
+                                    </div>
+                                )
                             )}
 
                             <button
