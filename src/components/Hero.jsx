@@ -19,9 +19,9 @@ const Hero = () => {
                         lineHeight: '1.1',
                         color: '#2D3436'
                     }}>
-                        Jack of all<br />
-                        Trades,Master of<br />
-                        <span style={{ color: 'var(--color-primary)' }}>None</span>
+                        A Dilettante <br />
+                        {/* Trades,Master of<br />
+                       // <span style={{ color: 'var(--color-primary)' }}>None</span> */}
                     </h1>
                     <p style={{
                         fontSize: '1.2rem',
@@ -30,7 +30,7 @@ const Hero = () => {
                         maxWidth: '450px',
                         lineHeight: '1.6'
                     }}>
-                        Upload your creative works, build an audience, and connect with the world.
+                        Jack of all trades, master of none.
                     </p>
 
                     <button
