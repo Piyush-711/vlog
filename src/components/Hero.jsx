@@ -19,9 +19,9 @@ const Hero = () => {
                         lineHeight: '1.1',
                         color: '#2D3436'
                     }}>
-                        Share Your <br />
-                        Vlogs, Stories <br />
-                        & <span style={{ color: 'var(--color-primary)' }}>Poetry</span>
+                        Jack of all<br />
+                        trades,Master of<br />
+                        & <span style={{ color: 'var(--color-primary)' }}>None</span>
                     </h1>
                     <p style={{
                         fontSize: '1.2rem',
