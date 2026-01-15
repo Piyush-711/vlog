@@ -21,7 +21,7 @@ const Hero = () => {
                     }}>
                         Jack of all<br />
                         Trades,Master of<br />
-                        & <span style={{ color: 'var(--color-primary)' }}>None</span>
+                        <span style={{ color: 'var(--color-primary)' }}>None</span>
                     </h1>
                     <p style={{
                         fontSize: '1.2rem',
