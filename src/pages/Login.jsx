@@ -57,12 +57,12 @@ const Login = () => {
                             required
                             value={credentials.email}
                             onChange={handleChange}
-                            style={{ width: '100%', padding: '14px 14px 14px 44px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)', fontSize: '1rem', background: 'var(--color-bg-main)' }}
+                            className="input-field"
                         />
                     </div>
 
                     <div style={{ position: 'relative' }}>
-                        <Lock size={18} style={{ position: 'absolute', left: '14px', top: '16px', color: '#B2BEC3' }} />
+                        <Lock size={18} style={{ position: 'absolute', left: '14px', top: '16px', color: '#B2BEC3', pointerEvents: 'none' }} />
                         <input
                             type="password"
                             name="password"
@@ -70,7 +70,7 @@ const Login = () => {
                             required
                             value={credentials.password}
                             onChange={handleChange}
-                            style={{ width: '100%', padding: '14px 14px 14px 44px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)', fontSize: '1rem', background: 'var(--color-bg-main)' }}
+                            className="input-field"
                         />
                     </div>
 

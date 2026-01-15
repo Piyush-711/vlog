@@ -168,3 +168,23 @@ button {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* Input Fields */
+.input-field {
+  width: 100%;
+  padding: 14px 14px 14px 44px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  font-size: 1rem;
+  background: var(--color-bg-main);
+  height: 52px; /* Force height */
+  appearance: none; /* Remove default browser styling */
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+.input-field:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 159, 67, 0.1);
+}
