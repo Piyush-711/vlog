@@ -1,31 +1,60 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Lock, Mail } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Lock, Mail, User } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 
 const Login = () => {
-    // Only Sign In logic now
-    const [credentials, setCredentials] = useState({ email: '', password: '' });
+    const [isLogin, setIsLogin] = useState(true);
+    const [credentials, setCredentials] = useState({ email: '', password: '', name: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [successMsg, setSuccessMsg] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Redirect logic: go back to where they came from (e.g. blog post) or default to home/admin
+    const from = location.state?.from?.pathname || '/';
 
     const handleChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
-    const handleLogin = async (e) => {
+    const handleAuth = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
+        setSuccessMsg('');
 
         try {
-            const { error } = await supabase.auth.signInWithPassword({
-                email: credentials.email,
-                password: credentials.password,
-            });
-            if (error) throw error;
-            navigate('/admin');
+            if (isLogin) {
+                // Sign In
+                const { error } = await supabase.auth.signInWithPassword({
+                    email: credentials.email,
+                    password: credentials.password,
+                });
+                if (error) throw error;
+                // If successful, redirect
+                if (from === '/') {
+                    // Check if admin
+                    navigate('/admin'); // Default behavior for direct login
+                } else {
+                    navigate(from);
+                }
+            } else {
+                // Sign Up
+                const { error } = await supabase.auth.signUp({
+                    email: credentials.email,
+                    password: credentials.password,
+                    options: {
+                        data: {
+                            full_name: credentials.name,
+                        },
+                    },
+                });
+                if (error) throw error;
+                setSuccessMsg('Account created! Please check your email to verify found or simply login if auto-confirmed.');
+                setIsLogin(true); // Switch back to login
+            }
         } catch (err) {
             setError(err.message);
         } finally {
@@ -41,13 +70,28 @@ const Login = () => {
                 </div>
 
                 <h1 style={{ fontSize: '1.8rem', fontWeight: '700', marginBottom: '8px' }}>
-                    Admin Login
+                    {isLogin ? 'Welcome Back' : 'Create Account'}
                 </h1>
                 <p style={{ color: 'var(--color-text-muted)', marginBottom: '32px' }}>
-                    Welcome back! Please login.
+                    {isLogin ? 'Please login to continue.' : 'Join to comment and interact.'}
                 </p>
 
-                <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <form onSubmit={handleAuth} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    {!isLogin && (
+                        <div style={{ position: 'relative' }}>
+                            <User size={18} style={{ position: 'absolute', left: '14px', top: '16px', color: '#B2BEC3' }} />
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Full Name"
+                                required
+                                value={credentials.name}
+                                onChange={handleChange}
+                                className="input-field"
+                            />
+                        </div>
+                    )}
+
                     <div style={{ position: 'relative' }}>
                         <Mail size={18} style={{ position: 'absolute', left: '14px', top: '16px', color: '#B2BEC3' }} />
                         <input
@@ -75,14 +119,21 @@ const Login = () => {
                     </div>
 
                     {error && <div style={{ color: '#e74c3c', fontSize: '0.9rem', padding: '10px', background: '#fadbd8', borderRadius: '8px' }}>{error}</div>}
+                    {successMsg && <div style={{ color: '#27ae60', fontSize: '0.9rem', padding: '10px', background: '#d5f5e3', borderRadius: '8px' }}>{successMsg}</div>}
 
                     <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-                        {loading ? 'Processing...' : 'Login'}
+                        {loading ? 'Processing...' : (isLogin ? 'Login' : 'Sign Up')}
                     </button>
                 </form>
 
                 <div style={{ marginTop: '24px', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                    New admin access is managed via database only.
+                    {isLogin ? "Don't have an account? " : "Already have an account? "}
+                    <button
+                        onClick={() => setIsLogin(!isLogin)}
+                        style={{ background: 'none', border: 'none', color: 'var(--color-primary)', fontWeight: '600', cursor: 'pointer', padding: 0 }}
+                    >
+                        {isLogin ? 'Sign Up' : 'Login'}
+                    </button>
                 </div>
             </div>
         </div>

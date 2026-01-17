@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { mockApi } from '../lib/supabaseClient';
 import { Loader2, ArrowLeft, Calendar, User } from 'lucide-react';
+import CommentsSection from '../components/CommentsSection';
 
 const BlogPost = () => {
     const { id } = useParams();
