@@ -3,7 +3,7 @@ import { Facebook, Twitter, Instagram, Heart } from 'lucide-react';
 
 const Footer = () => {
     return (
-        <footer style={{ marginTop: 'auto', padding: '40px 0', borderTop: '1px solid var(--color-border)', background: 'white' }}>
+        <footer style={{ marginTop: 'auto', padding: '40px 0', borderTop: '1px solid var(--color-border)', background: 'var(--color-bg-card)' }}>
             <div className="container" style={{ textAlign: 'center' }}>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '24px' }}>
                     <Instagram size={20} className="social-icon" />
