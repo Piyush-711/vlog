@@ -17,12 +17,12 @@ const Navbar = () => {
 
     return (
         <nav style={{
-            background: 'rgba(255,255,255,0.9)',
+            background: 'var(--color-header-bg)',
             backdropFilter: 'blur(8px)',
             position: 'sticky',
             top: 0,
             zIndex: 100,
-            borderBottom: '1px solid rgba(0,0,0,0.03)'
+            borderBottom: '1px solid var(--color-border)'
         }}>
             <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px' }}>
                 {/* Logo */}
