@@ -95,7 +95,33 @@ const AdminDashboard = () => {
 
             if (inputType === 'file' && file) {
                 // Upload file to Supabase
-                finalThumbnailUrl = await mockApi.uploadFile(file);
+                const uploadedUrl = await mockApi.uploadFile(file);
+
+                if (formData.category === 'song') {
+                    // If it's a song, the file is the CONTENT (audio), not the thumbnail
+                    // Wait, the form has TWO file inputs potential (Thumbnail AND Audio).
+                    // My current simple form uses one 'file' state. This is a limitation.
+                    // I should assume for 'song', the file upload is for AUDIO if selected there.
+                    // But wait, the user might want to upload a thumbnail too.
+                    // DESIGN DECISION: For now, if category is song, the file input is for AUDIO (content).
+                    // Thumbnail must be URL for songs if uploading audio file? Or I need separate states.
+                    // To keep it simple: If category is song, 'file' state goes to 'content'. Thumbnail must be URL.
+                    // OR: I can check which input triggered the change... but I have one state.
+                    // Let's force Thumbnail to be URL when uploading Audio File for simplicity in this iteration.
+                    dataToSave.content = uploadedUrl;
+                } else {
+                    // For others (gallery, etc), it is likely the thumbnail/image itself
+                    finalThumbnailUrl = uploadedUrl;
+                }
+            }
+
+            // Correction logic for dataToSave:
+            if (formData.category === 'song' && inputType === 'file') {
+                // file was audio
+                dataToSave.thumbnail = formData.thumbnail; // Maintain URL for thumbnail
+                dataToSave.content = finalThumbnailUrl; // The uploaded file url
+            } else {
+                dataToSave.thumbnail = finalThumbnailUrl;
             }
 
             const dataToSave = { ...formData, thumbnail: finalThumbnailUrl };
@@ -179,6 +205,8 @@ const AdminDashboard = () => {
                                     style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem', background: 'white' }}
                                 >
                                     <option value="story">Written Story</option>
+                                    <option value="blog">Blog Post</option>
+                                    <option value="song">Song / Audio</option>
                                     <option value="vlog">Video Log</option>
                                     <option value="poetry">Poetry</option>
                                     <option value="profile">Profile Intro</option>
@@ -266,7 +294,7 @@ const AdminDashboard = () => {
                                 formData.category !== 'gallery' && (
                                     <div>
                                         <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                                            {formData.category === 'profile' ? 'Bio / Introduction' : 'Main Text Content'}
+                                            {formData.category === 'profile' ? 'Bio / Introduction' : (formData.category === 'blog' ? 'Blog Content' : 'Main Text Content')}
                                         </label>
                                         <textarea
                                             name="text_content"
@@ -279,6 +307,66 @@ const AdminDashboard = () => {
                                         />
                                     </div>
                                 )
+                            )}
+
+                            {/* Song Audio Upload */}
+                            {formData.category === 'song' && (
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Audio File (MP3)</label>
+                                    <div style={{ display: 'flex', gap: '16px', marginBottom: '12px' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                                            <input
+                                                type="radio"
+                                                name="songInputType"
+                                                checked={inputType === 'url'} // Reusing inputType state for simplicity, heavily dependent on user flow not mixing inputs
+                                                onChange={() => setInputType('url')}
+                                            /> URL
+                                        </label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                                            <input
+                                                type="radio"
+                                                name="songInputType"
+                                                checked={inputType === 'file'}
+                                                onChange={() => setInputType('file')}
+                                            /> Upload File
+                                        </label>
+                                    </div>
+
+                                    {inputType === 'url' ? (
+                                        <input
+                                            type="url"
+                                            name="content"
+                                            value={formData.content}
+                                            onChange={handleChange}
+                                            required
+                                            style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem' }}
+                                            placeholder="https://..."
+                                        />
+                                    ) : (
+                                        <input
+                                            type="file"
+                                            accept="audio/mpeg, audio/mp3, audio/wav"
+                                            onChange={(e) => setFile(e.target.files[0])} // Reusing file state
+                                            required={inputType === 'file'}
+                                            style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem', background: 'var(--color-input-bg)' }}
+                                        />
+                                    )}
+                                </div>
+                            )}
+
+                            {(formData.category === 'song') && (
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Artist / Description</label>
+                                    <input
+                                        type="text"
+                                        name="text_content"
+                                        required
+                                        value={formData.text_content}
+                                        onChange={handleChange}
+                                        style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem' }}
+                                        placeholder="e.g. Original Composition"
+                                    />
+                                </div>
                             )}
 
                             <button
@@ -318,6 +406,8 @@ const AdminDashboard = () => {
                         >
                             <option value="all">All Categories</option>
                             <option value="story">Stories</option>
+                            <option value="blog">Blog Posts</option>
+                            <option value="song">Songs</option>
                             <option value="vlog">Vlogs</option>
                             <option value="poetry">Poetry</option>
                             <option value="profile">Profile</option>

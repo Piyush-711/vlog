@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
+import ThemeToggle from './ThemeToggle';
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        { name: 'Explore', path: '/explore' }, // Placeholder based on image
+        { name: 'Explore', path: '/explore' },
+        { name: 'Songs', path: '/songs' },
+        { name: 'Blog', path: '/blog' },
         { name: 'About', path: '/about' },
-        { name: 'Categories', path: '/categories' }, // Placeholder
     ];
 
     return (
@@ -33,7 +36,7 @@ const Navbar = () => {
                 </Link>
 
                 {/* Desktop Nav - Centered */}
-                <div className="desktop-nav" style={{ display: 'flex', gap: '40px', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+                <div className="desktop-nav" style={{ display: 'flex', gap: '32px', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
@@ -51,6 +54,7 @@ const Navbar = () => {
 
                 {/* Right Actions - Login/Signup */}
                 <div className="desktop-nav" style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                    <ThemeToggle />
                     {/* Auth buttons passed to admin area only */}
                 </div>
 
@@ -71,12 +75,13 @@ const Navbar = () => {
                     top: '80px',
                     left: 0,
                     width: '100%',
-                    background: 'white',
+                    background: 'var(--color-bg-card)',
                     padding: '20px',
                     boxShadow: 'var(--shadow-soft)',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '20px'
+                    gap: '20px',
+                    color: 'var(--color-text-main)'
                 }}>
                     {navLinks.map((link) => (
                         <Link
@@ -88,7 +93,9 @@ const Navbar = () => {
                             {link.name}
                         </Link>
                     ))}
-                    <div style={{ borderTop: '1px solid #eee', margin: '10px 0' }}></div>
+                    <div style={{ borderTop: '1px solid var(--color-border)', margin: '10px 0', paddingTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                        <ThemeToggle />
+                    </div>
                     <Link to="/admin" className="btn btn-primary" style={{ width: '100%' }}>Login / Sign Up</Link>
                 </div>
             )}

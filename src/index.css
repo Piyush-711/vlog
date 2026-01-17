@@ -1,31 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Color Palette - Vibrant Pastel */
+  /* Color Palette - Vibrant Pastel (Light Mode) */
   --color-bg-main: #FFFBF8;
-  /* Warm cream */
   --color-bg-card: #FFFFFF;
 
   --color-primary: #FF9F43;
-  /* Vivid Orange for CTA */
   --color-primary-hover: #F98926;
 
   --color-secondary: #A29BFE;
-  /* Soft Purple */
   --color-secondary-light: #E0C3FC;
   --color-secondary-bg: #8c7ae6;
-  /* Darker purple for backgrounds */
 
   --color-text-main: #2D3436;
-  /* Dark Grey */
   --color-text-muted: #636E72;
+  --color-text-inverted: #FFFFFF;
 
   --color-border: #F0F0F0;
+  --color-input-bg: #FFFFFF;
 
   /* Spacing & Radius */
   --radius-xl: 24px;
   --radius-lg: 16px;
   --radius-md: 12px;
+  --radius-sm: 8px;
 
   --shadow-soft: 0 10px 25px -5px rgba(162, 155, 254, 0.15), 0 8px 10px -6px rgba(162, 155, 254, 0.1);
   --shadow-hover: 0 20px 25px -5px rgba(162, 155, 254, 0.2), 0 10px 10px -5px rgba(162, 155, 254, 0.1);
@@ -34,10 +32,39 @@
   --font-family-main: 'Outfit', sans-serif;
 }
 
+[data-theme='dark'] {
+  --color-bg-main: #1e1e2e;
+  /* Dark Blue-Grey */
+  --color-bg-card: #2d2d44;
+  /* Slightly lighter card bg */
+
+  --color-primary: #FF9F43;
+  /* Keep orange pop */
+  --color-primary-hover: #F98926;
+
+  --color-secondary: #A29BFE;
+  --color-secondary-light: #6c5ce7;
+  /* Darker purple accent */
+  --color-secondary-bg: #a29bfe;
+
+  --color-text-main: #f5f6fa;
+  /* Light text */
+  --color-text-muted: #b2bec3;
+  /* Muted light text */
+  --color-text-inverted: #2D3436;
+
+  --color-border: #3f3f5f;
+  --color-input-bg: #2d2d44;
+
+  --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 body {
@@ -177,11 +204,14 @@ button {
   border: 1px solid var(--color-border);
   font-size: 1rem;
   background: var(--color-bg-main);
-  height: 52px; /* Force height */
-  appearance: none; /* Remove default browser styling */
+  height: 52px;
+  /* Force height */
+  appearance: none;
+  /* Remove default browser styling */
   outline: none;
   transition: border-color 0.2s;
-  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  box-sizing: border-box;
+  /* Ensure padding doesn't affect width */
 }
 
 .input-field:focus {
