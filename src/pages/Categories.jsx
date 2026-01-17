@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Video, Feather } from 'lucide-react';
+import { BookOpen, Video, Feather, Music, FileText } from 'lucide-react';
 
 const CategoryCard = ({ title, icon: Icon, description, link, color }) => (
     <Link to={link} className="card" style={{
@@ -70,6 +70,20 @@ const Categories = () => {
                     description="Experience the beauty of rhythm and rhyme."
                     link="/poetry"
                     color="#A29BFE"
+                />
+                <CategoryCard
+                    title="Songs"
+                    icon={Music}
+                    description="Listen to original compositions and covers."
+                    link="/songs"
+                    color="#fd79a8"
+                />
+                <CategoryCard
+                    title="Blog"
+                    icon={FileText}
+                    description="Read about my journey and thoughts."
+                    link="/blog"
+                    color="#00cec9"
                 />
             </div>
         </div>
