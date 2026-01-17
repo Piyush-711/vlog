@@ -112,6 +112,8 @@ const BlogPost = () => {
                 }}>
                     {post.text_content}
                 </div>
+
+                <CommentsSection contentId={id} />
             </div>
         </article>
     );

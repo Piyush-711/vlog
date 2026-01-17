@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { mockApi } from '../lib/supabaseClient';
 import { ArrowLeft, Calendar, User, Clock, Loader2 } from 'lucide-react';
+import CommentsSection from '../components/CommentsSection';
 
 const ViewContent = () => {
     const { id } = useParams();
@@ -158,6 +159,8 @@ const ViewContent = () => {
                 )}
 
             </div>
+
+            <CommentsSection contentId={id} />
         </div>
     );
 };
