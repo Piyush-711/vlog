@@ -16,6 +16,7 @@ import BlogPost from './pages/BlogPost';
 import { supabase } from './lib/supabaseClient';
 import { Loader2 } from 'lucide-react';
 import { ThemeProvider } from './context/ThemeContext';
+import PageTransition from './components/PageTransition';
 
 const PrivateRoute = ({ children }) => {
   const [session, setSession] = useState(null);
@@ -51,23 +52,25 @@ function App() {
           <Navbar />
           <main style={{ flex: 1 }}>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/explore" element={<Explore />} />
-              <Route path="/categories" element={<Categories />} />
-              <Route path="/stories" element={<Feed type="story" />} />
-              <Route path="/vlogs" element={<Feed type="vlog" />} />
-              <Route path="/poetry" element={<Feed type="poetry" />} />
-              <Route path="/songs" element={<Songs />} />
-              <Route path="/blog" element={<BlogList />} />
-              <Route path="/blog/:id" element={<BlogPost />} />
-              <Route path="/view/:id" element={<ViewContent />} />
-              <Route path="/about" element={<About />} />
+              <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+              <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+              <Route path="/explore" element={<PageTransition><Explore /></PageTransition>} />
+              <Route path="/categories" element={<PageTransition><Categories /></PageTransition>} />
+              <Route path="/stories" element={<PageTransition><Feed type="story" /></PageTransition>} />
+              <Route path="/vlogs" element={<PageTransition><Feed type="vlog" /></PageTransition>} />
+              <Route path="/poetry" element={<PageTransition><Feed type="poetry" /></PageTransition>} />
+              <Route path="/songs" element={<PageTransition><Songs /></PageTransition>} />
+              <Route path="/blog" element={<PageTransition><BlogList /></PageTransition>} />
+              <Route path="/blog/:id" element={<PageTransition><BlogPost /></PageTransition>} />
+              <Route path="/view/:id" element={<PageTransition><ViewContent /></PageTransition>} />
+              <Route path="/about" element={<PageTransition><About /></PageTransition>} />
 
               <Route path="/admin" element={
-                <PrivateRoute>
-                  <AdminDashboard />
-                </PrivateRoute>
+                <PageTransition>
+                  <PrivateRoute>
+                    <AdminDashboard />
+                  </PrivateRoute>
+                </PageTransition>
               } />
             </Routes>
           </main>
