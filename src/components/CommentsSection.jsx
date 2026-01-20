@@ -47,16 +47,27 @@ const CommentsSection = ({ contentId }) => {
             if (error) console.error("Error fetching comments", error);
 
             if (data) {
-                // Process into tree structure
-                const commentMap = {};
-                const roots = [];
+                // Fetch profiles for these comments
+                const userIds = [...new Set(data.map(c => c.user_id))];
+                let profileMap = {};
+
+                if (userIds.length > 0) {
+                    const { data: profiles, error: profilesError } = await supabase
+                        .from('profiles')
+                        .select('id, full_name, avatar_url')
+                        .in('id', userIds);
+
+                    if (profiles) {
+                        profiles.forEach(p => {
+                            profileMap[p.id] = p;
+                        });
+                    }
+                }
 
                 data.forEach(comment => {
                     comment.replies = [];
-                    // Mock profile name logic if we don't have a profile table join yet
-                    // In a real app we'd join 'profiles' table.
-                    // For now, let's assume specific metadata isn't easily reachable client-side from auth.users without a public table.
-                    // We will map display name in CommentItem safely.
+                    // Attach profile
+                    comment.profiles = profileMap[comment.user_id] || null;
                     commentMap[comment.id] = comment;
                 });
 

@@ -1,7 +1,7 @@
 -- Create a table for comments
 create table if not exists comments (
   id uuid default gen_random_uuid() primary key,
-  content_id uuid references content(id) on delete cascade not null,
+  content_id bigint references content(id) on delete cascade not null,
   user_id uuid references auth.users(id) not null,
   parent_id uuid references comments(id) on delete cascade,
   content text not null,

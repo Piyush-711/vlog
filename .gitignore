@@ -1,4 +1,5 @@
-# Logs
+This application is designed to overcome limitations related to security, energy inefficiency, and storage issues, while promoting eco-friendly operation by reducing carbon emissions.This system relies on a decentralized edge computing model. The primary objective of the system is to detect hazards using Blockchain, IoT, and Green AI technologies. Blockchain is employed to ensure secure data transmission, while the Proof of Authority is used in replace of bitcoin not everyone needs to be a validator only trusted nodes. Federated Learning  AI model is sent to the IoT devices. The devices train on their own local data and only send back a tiny update file to the central server. it increase the privacy and efficency.
+The system does not transmit data continuously; instead, data is processed locally and transmitted only when a hazardous event occurs. This approach significantly reduces energy consumption and minimizes cloud storage usage. The system is also capable of automatically taking necessary actions when abnormal or dangerous situations are detected. In contrast, traditional systems consume high energy, depend heavily on cloud storage, and are more vulnerable to data manipulation during transmission. The proposed solution provides a secure, energy-efficient, and reliable hazard detection system.# Logs
 logs
 *.log
 npm-debug.log*

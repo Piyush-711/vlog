@@ -83,7 +83,7 @@ const ViewContent = () => {
             </div>
 
             {/* Main Content Area */}
-            <div className="content-body" style={{ background: 'white', borderRadius: 'var(--radius-lg)', padding: isPoetry ? '60px' : '0', boxShadow: isPoetry ? 'var(--shadow-sm)' : 'none' }}>
+            <div className={`content-body ${isPoetry ? 'poetry-layout' : ''}`} style={{ background: 'var(--color-bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: isPoetry ? 'var(--shadow-sm)' : 'none' }}>
 
                 {isVideo ? (
                     <div style={{ borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-md)', marginBottom: '40px', background: '#000', aspectRatio: '16/9' }}>
