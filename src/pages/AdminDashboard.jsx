@@ -91,40 +91,66 @@ const AdminDashboard = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            let finalThumbnailUrl = formData.thumbnail;
+            let dataToSave = { ...formData }; // Initialize it first
 
             if (inputType === 'file' && file) {
                 // Upload file to Supabase
                 const uploadedUrl = await mockApi.uploadFile(file);
 
                 if (formData.category === 'song') {
-                    // If it's a song, the file is the CONTENT (audio), not the thumbnail
-                    // Wait, the form has TWO file inputs potential (Thumbnail AND Audio).
-                    // My current simple form uses one 'file' state. This is a limitation.
-                    // I should assume for 'song', the file upload is for AUDIO if selected there.
-                    // But wait, the user might want to upload a thumbnail too.
-                    // DESIGN DECISION: For now, if category is song, the file input is for AUDIO (content).
-                    // Thumbnail must be URL for songs if uploading audio file? Or I need separate states.
-                    // To keep it simple: If category is song, 'file' state goes to 'content'. Thumbnail must be URL.
-                    // OR: I can check which input triggered the change... but I have one state.
-                    // Let's force Thumbnail to be URL when uploading Audio File for simplicity in this iteration.
+                    // For song, file is content
                     dataToSave.content = uploadedUrl;
+
+                    // Keep existing thumbnail URL if present in form, or set to empty if not
+                    // The logic below was checking inputType, but we are inside inputType === 'file'
+                    // so we rely on formData.thumbnail staying as is (empty or URL)
+                    // If user wanted to upload thumbnail for song, they can't do both in this simple form currently
                 } else {
-                    // For others (gallery, etc), it is likely the thumbnail/image itself
+                    dataToSave.thumbnail = uploadedUrl;
+                }
+            }
+
+            // Ensure thumbnail is set if we didn't upload one (e.g. URL mode)
+            if (inputType === 'url') {
+                dataToSave.thumbnail = formData.thumbnail;
+                // And content for video/song/etc
+                if (['vlog', 'song', 'achievement'].includes(formData.category)) {
+                    dataToSave.content = formData.content;
+                }
+            }
+
+            // Normalize song content if needed (already handled above roughly)
+            // But let's stick to the previous logic's intent but fixed:
+
+            // Re-evaluating the previous complex logic block:
+            /* 
+               The previous logic was trying to set properties on the not-yet-exist 'dataToSave'.
+               Let's simplify.
+               We have 'formData' which has the base state.
+               We have 'finalThumbnailUrl' logic from lines 94-114 which I didn't include in replacement yet.
+            */
+
+            // Let's rewrite the whole handleSubmit block logic cleaner
+
+            // Reset logic
+            dataToSave = { ...formData };
+
+            let finalThumbnailUrl = formData.thumbnail;
+            let finalContentUrl = formData.content;
+
+            if (inputType === 'file' && file) {
+                const uploadedUrl = await mockApi.uploadFile(file);
+
+                if (formData.category === 'song') {
+                    finalContentUrl = uploadedUrl;
+                    // Thumbnail remains what it was (likely empty or URL string)
+                } else {
                     finalThumbnailUrl = uploadedUrl;
                 }
             }
 
-            // Correction logic for dataToSave:
-            if (formData.category === 'song' && inputType === 'file') {
-                // file was audio
-                dataToSave.thumbnail = formData.thumbnail; // Maintain URL for thumbnail
-                dataToSave.content = finalThumbnailUrl; // The uploaded file url
-            } else {
-                dataToSave.thumbnail = finalThumbnailUrl;
-            }
-
-            const dataToSave = { ...formData, thumbnail: finalThumbnailUrl };
+            dataToSave.thumbnail = finalThumbnailUrl;
+            dataToSave.content = finalContentUrl;
 
             if (editMode) {
                 await mockApi.updateContent(currentId, dataToSave);
@@ -144,7 +170,8 @@ const AdminDashboard = () => {
 
         } catch (error) {
             console.error(error);
-            alert(`Error saving content: ${error.message || "Unknown error"}. Check if table 'content' exists and RLS policies allow write access.`);
+            console.error("Full error stack:", error);
+            alert(`Error saving content: ${error.message || "Unknown error"}. Check console for details.`);
         } finally {
             setLoading(false);
         }

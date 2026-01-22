@@ -163,7 +163,7 @@ const CommentsSection = ({ contentId }) => {
             {/* Comment Input */}
             <div style={{ marginBottom: '48px', display: 'flex', gap: '16px' }}>
                 <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: user ? '#a29bfe' : '#e0e0e0', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                    {user ? user.email.charAt(0).toUpperCase() : <User size={20} />}
+                    {user ? user.email.charAt(0).toUpperCase() : <SimpleUserIcon size={20} />}
                 </div>
 
                 <div style={{ flex: 1 }}>
@@ -239,7 +239,7 @@ const CommentsSection = ({ contentId }) => {
 };
 
 // Simple User Icon helper
-const User = ({ size }) => (
+const SimpleUserIcon = ({ size }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width={size}
