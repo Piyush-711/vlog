@@ -64,6 +64,9 @@ const CommentsSection = ({ contentId }) => {
                     }
                 }
 
+                let commentMap = {};
+                let roots = [];
+
                 data.forEach(comment => {
                     comment.replies = [];
                     // Attach profile
