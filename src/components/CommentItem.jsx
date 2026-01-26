@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { User, MessageCircle, MoreVertical, Trash2 } from 'lucide-react';
+import { User, MessageCircle, MoreVertical, Trash2, Edit2, X, Check } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 
-const CommentItem = ({ comment, user, onReply, onDelete, isReply = false }) => {
+const CommentItem = ({ comment, user, onReply, onDelete, onEdit, isReply = false }) => {
     const [showReplyForm, setShowReplyForm] = useState(false);
     const [replyText, setReplyText] = useState('');
     const [submitting, setSubmitting] = useState(false);
+
+    // Edit state
+    const [isEditing, setIsEditing] = useState(false);
+    const [editContent, setEditContent] = useState(comment.content);
+    const [savingEdit, setSavingEdit] = useState(false);
 
     // Format relative time (simple version)
     const timeAgo = (dateFormatted) => {
@@ -32,6 +37,17 @@ const CommentItem = ({ comment, user, onReply, onDelete, isReply = false }) => {
         setReplyText('');
         setSubmitting(false);
         setShowReplyForm(false);
+    };
+
+    const handleEditSubmit = async () => {
+        if (!editContent.trim() || editContent === comment.content) {
+            setIsEditing(false);
+            return;
+        }
+        setSavingEdit(true);
+        await onEdit(comment.id, editContent);
+        setSavingEdit(false);
+        setIsEditing(false);
     };
 
     // Assuming we might join profiles later, but for now we might not have user metadata on the comment object widely available 
@@ -71,9 +87,53 @@ const CommentItem = ({ comment, user, onReply, onDelete, isReply = false }) => {
                 </div>
 
                 {/* Content */}
-                <p style={{ fontSize: '0.95rem', lineHeight: '1.5', marginBottom: '8px', color: 'var(--color-text-main)' }}>
-                    {comment.content}
-                </p>
+                {isEditing ? (
+                    <div style={{ marginBottom: '8px' }}>
+                        <textarea
+                            value={editContent}
+                            onChange={(e) => setEditContent(e.target.value)}
+                            style={{
+                                width: '100%',
+                                minHeight: '60px',
+                                padding: '8px',
+                                borderRadius: '4px',
+                                border: '1px solid var(--color-border)',
+                                background: 'var(--color-bg-card)',
+                                color: 'var(--color-text-main)',
+                                fontSize: '0.95rem',
+                                resize: 'vertical'
+                            }}
+                        />
+                        <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                            <button
+                                onClick={handleEditSubmit}
+                                disabled={savingEdit}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '4px',
+                                    background: 'var(--color-primary)', color: 'white',
+                                    border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', cursor: 'pointer'
+                                }}
+                            >
+                                <Check size={14} /> Save
+                            </button>
+                            <button
+                                onClick={() => { setIsEditing(false); setEditContent(comment.content); }}
+                                disabled={savingEdit}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '4px',
+                                    background: 'transparent', color: 'var(--color-text-muted)',
+                                    border: '1px solid var(--color-border)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', cursor: 'pointer'
+                                }}
+                            >
+                                <X size={14} /> Cancel
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <p style={{ fontSize: '0.95rem', lineHeight: '1.5', marginBottom: '8px', color: 'var(--color-text-main)' }}>
+                        {comment.content}
+                    </p>
+                )}
 
                 {/* Actions */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -94,22 +154,39 @@ const CommentItem = ({ comment, user, onReply, onDelete, isReply = false }) => {
                         Reply
                     </button>
 
-                    {isOwner && (
-                        <button
-                            onClick={() => onDelete(comment.id)}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '6px',
-                                fontSize: '0.85rem',
-                                cursor: 'pointer',
-                                color: '#ff7675'
-                            }}
-                        >
-                            Delete
-                        </button>
+                    {isOwner && !isEditing && (
+                        <>
+                            <button
+                                onClick={() => setIsEditing(true)}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontSize: '0.85rem',
+                                    cursor: 'pointer',
+                                    color: 'var(--color-text-muted)'
+                                }}
+                            >
+                                <Edit2 size={14} /> Edit
+                            </button>
+                            <button
+                                onClick={() => onDelete(comment.id)}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontSize: '0.85rem',
+                                    cursor: 'pointer',
+                                    color: '#ff7675'
+                                }}
+                            >
+                                <Trash2 size={14} /> Delete
+                            </button>
+                        </>
                     )}
                 </div>
 
@@ -172,6 +249,7 @@ const CommentItem = ({ comment, user, onReply, onDelete, isReply = false }) => {
                                 user={user}
                                 onReply={onReply}
                                 onDelete={onDelete}
+                                onEdit={onEdit}
                                 isReply={true}
                             />
                         ))}

@@ -148,6 +148,21 @@ const CommentsSection = ({ contentId }) => {
         }
     };
 
+    const handleEdit = async (commentId, newContent) => {
+        try {
+            const { error } = await supabase
+                .from('comments')
+                .update({ content: newContent })
+                .eq('id', commentId);
+
+            if (error) throw error;
+            fetchComments();
+        } catch (err) {
+            console.error(err);
+            alert("Failed to update comment");
+        }
+    };
+
     // Calculate total comments
     const countComments = (list) => {
         let count = 0;
@@ -233,6 +248,7 @@ const CommentsSection = ({ contentId }) => {
                             user={user}
                             onReply={handleReply}
                             onDelete={handleDelete}
+                            onEdit={handleEdit}
                         />
                     ))}
                 </div>
