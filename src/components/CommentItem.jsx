@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User, MessageCircle, MoreVertical, Trash2, Edit2, X, Check } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 
-const CommentItem = ({ comment, user, onReply, onDelete, onEdit, isReply = false }) => {
+const CommentItem = ({ comment, user, onReply, onDelete, onEdit, isAdmin, isReply = false }) => {
     const [showReplyForm, setShowReplyForm] = useState(false);
     const [replyText, setReplyText] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -155,38 +155,39 @@ const CommentItem = ({ comment, user, onReply, onDelete, onEdit, isReply = false
                     </button>
 
                     {isOwner && !isEditing && (
-                        <>
-                            <button
-                                onClick={() => setIsEditing(true)}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '6px',
-                                    fontSize: '0.85rem',
-                                    cursor: 'pointer',
-                                    color: 'var(--color-text-muted)'
-                                }}
-                            >
-                                <Edit2 size={14} /> Edit
-                            </button>
-                            <button
-                                onClick={() => onDelete(comment.id)}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '6px',
-                                    fontSize: '0.85rem',
-                                    cursor: 'pointer',
-                                    color: '#ff7675'
-                                }}
-                            >
-                                <Trash2 size={14} /> Delete
-                            </button>
-                        </>
+                        <button
+                            onClick={() => setIsEditing(true)}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                fontSize: '0.85rem',
+                                cursor: 'pointer',
+                                color: 'var(--color-text-muted)'
+                            }}
+                        >
+                            <Edit2 size={14} /> Edit
+                        </button>
+                    )}
+
+                    {(isOwner || isAdmin) && !isEditing && (
+                        <button
+                            onClick={() => onDelete(comment.id)}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                fontSize: '0.85rem',
+                                cursor: 'pointer',
+                                color: '#ff7675'
+                            }}
+                        >
+                            <Trash2 size={14} /> Delete
+                        </button>
                     )}
                 </div>
 
@@ -247,6 +248,7 @@ const CommentItem = ({ comment, user, onReply, onDelete, onEdit, isReply = false
                                 key={reply.id}
                                 comment={reply}
                                 user={user}
+                                isAdmin={isAdmin}
                                 onReply={onReply}
                                 onDelete={onDelete}
                                 onEdit={onEdit}

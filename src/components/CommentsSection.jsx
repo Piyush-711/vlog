@@ -11,24 +11,61 @@ const CommentsSection = ({ contentId }) => {
     const [newComment, setNewComment] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
+    const [isAdmin, setIsAdmin] = useState(false);
+
     // For Auth Redirect
     const location = useLocation();
 
     useEffect(() => {
-        // Check Auth
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user || null);
-        });
+        // Check Auth and Admin Status
+        const checkUser = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            const currentUser = session?.user || null;
+            setUser(currentUser);
+
+            if (currentUser) {
+                checkAdminStatus(currentUser.id);
+            } else {
+                setIsAdmin(false);
+            }
+        };
+
+        checkUser();
 
         // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user || null);
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+            const currentUser = session?.user || null;
+            setUser(currentUser);
+            if (currentUser) {
+                checkAdminStatus(currentUser.id);
+            } else {
+                setIsAdmin(false);
+            }
         });
 
         fetchComments();
 
         return () => subscription.unsubscribe();
     }, [contentId]);
+
+    const checkAdminStatus = async (userId) => {
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('is_admin')
+                .eq('id', userId)
+                .single();
+
+            if (data?.is_admin) {
+                setIsAdmin(true);
+            } else {
+                setIsAdmin(false);
+            }
+        } catch (err) {
+            console.error("Error checking admin status:", err);
+            setIsAdmin(false);
+        }
+    };
 
     const fetchComments = async () => {
         try {
@@ -246,6 +283,7 @@ const CommentsSection = ({ contentId }) => {
                             key={comment.id}
                             comment={comment}
                             user={user}
+                            isAdmin={isAdmin}
                             onReply={handleReply}
                             onDelete={handleDelete}
                             onEdit={handleEdit}
