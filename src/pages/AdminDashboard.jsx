@@ -233,6 +233,7 @@ const AdminDashboard = () => {
                                 >
                                     <option value="story">Written Story</option>
                                     <option value="blog">Blog Post</option>
+                                    <option value="shayari">Shayari (Quote)</option>
                                     <option value="song">Song / Audio</option>
                                     <option value="vlog">Video Log</option>
                                     <option value="poetry">Poetry</option>
@@ -244,7 +245,9 @@ const AdminDashboard = () => {
 
                             {/* Thumbnail */}
                             <div>
-                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Thumbnail Source</label>
+                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+                                    {formData.category === 'shayari' ? 'Background Image (Optional)' : 'Thumbnail Source'}
+                                </label>
                                 <div style={{ display: 'flex', gap: '16px', marginBottom: '12px' }}>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
                                         <input
@@ -286,20 +289,22 @@ const AdminDashboard = () => {
                             </div>
 
                             {/* Preview Text */}
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                                    {formData.category === 'profile' ? 'Role / Tagline' : (formData.category === 'achievement' ? 'Description' : 'Short Preview')}
-                                </label>
-                                <textarea
-                                    name="preview"
-                                    required
-                                    value={formData.preview}
-                                    onChange={handleChange}
-                                    rows={3}
-                                    style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem', fontFamily: 'inherit' }}
-                                    placeholder={formData.category === 'achievement' ? 'e.g., Awarded for excellence...' : 'A short description for the card...'}
-                                />
-                            </div>
+                            {(formData.category !== 'shayari') && (
+                                <div>
+                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
+                                        {formData.category === 'profile' ? 'Role / Tagline' : (formData.category === 'achievement' ? 'Description' : 'Short Preview')}
+                                    </label>
+                                    <textarea
+                                        name="preview"
+                                        required={formData.category !== 'shayari'}
+                                        value={formData.preview}
+                                        onChange={handleChange}
+                                        rows={3}
+                                        style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem', fontFamily: 'inherit' }}
+                                        placeholder={formData.category === 'achievement' ? 'e.g., Awarded for excellence...' : 'A short description for the card...'}
+                                    />
+                                </div>
+                            )}
 
                             {/* Dynamic Content Fields */}
                             {(formData.category === 'vlog' || formData.category === 'achievement') ? (
@@ -321,7 +326,10 @@ const AdminDashboard = () => {
                                 formData.category !== 'gallery' && (
                                     <div>
                                         <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>
-                                            {formData.category === 'profile' ? 'Bio / Introduction' : (formData.category === 'blog' ? 'Blog Content' : 'Main Text Content')}
+                                            {formData.category === 'profile' ? 'Bio / Introduction' : (
+                                                formData.category === 'shayari' ? 'Shayari Content (The Quote)' :
+                                                    (formData.category === 'blog' ? 'Blog Content' : 'Main Text Content')
+                                            )}
                                         </label>
                                         <textarea
                                             name="text_content"
@@ -330,7 +338,9 @@ const AdminDashboard = () => {
                                             onChange={handleChange}
                                             rows={10}
                                             style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)', fontSize: '1rem', fontFamily: 'inherit' }}
-                                            placeholder={formData.category === 'profile' ? 'Tell us about yourself...' : 'Write your story or poem here...'}
+                                            placeholder={formData.category === 'profile' ? 'Tell us about yourself...' :
+                                                (formData.category === 'shayari' ? 'Write your shayari here...' : 'Write your story or poem here...')
+                                            }
                                         />
                                     </div>
                                 )
@@ -437,6 +447,7 @@ const AdminDashboard = () => {
                             <option value="song">Songs</option>
                             <option value="vlog">Vlogs</option>
                             <option value="poetry">Poetry</option>
+                            <option value="shayari">Shayari</option>
                             <option value="profile">Profile</option>
                             <option value="gallery">Gallery</option>
                             <option value="achievement">Achievements</option>

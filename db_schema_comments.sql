@@ -33,6 +33,17 @@ create policy "Users can delete own comments"
   on comments for delete
   using ( auth.uid() = user_id );
 
+-- 5. Admins can delete any comment
+create policy "Admins can delete any comment"
+  on comments for delete
+  using (
+    exists (
+      select 1 from public.profiles
+      where profiles.id = auth.uid()
+      and profiles.is_admin = true
+    )
+  );
+
 -- Add a function to handle updated_at
 create or replace function handle_updated_at()
 returns trigger as $$

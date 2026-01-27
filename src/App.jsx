@@ -13,6 +13,8 @@ import About from './pages/About';
 import Songs from './pages/Songs';
 import BlogList from './pages/BlogList';
 import BlogPost from './pages/BlogPost';
+import Shayari from './pages/Shayari';
+import ViewShayari from './pages/ViewShayari';
 import { supabase } from './lib/supabaseClient';
 import { Loader2 } from 'lucide-react';
 import { ThemeProvider } from './context/ThemeContext';
@@ -59,6 +61,8 @@ function App() {
               <Route path="/stories" element={<PageTransition><Feed type="story" /></PageTransition>} />
               <Route path="/vlogs" element={<PageTransition><Feed type="vlog" /></PageTransition>} />
               <Route path="/poetry" element={<PageTransition><Feed type="poetry" /></PageTransition>} />
+              <Route path="/shayari" element={<PageTransition><Shayari /></PageTransition>} />
+              <Route path="/shayari/:id" element={<PageTransition><ViewShayari /></PageTransition>} />
               <Route path="/songs" element={<PageTransition><Songs /></PageTransition>} />
               <Route path="/blog" element={<PageTransition><BlogList /></PageTransition>} />
               <Route path="/blog/:id" element={<PageTransition><BlogPost /></PageTransition>} />
